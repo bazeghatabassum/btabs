@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AppTimeTracker</string>
+    <string name="title_activity_show_apps">ShowApps</string>
+    <string name="title_activity_alarm_receiver">AlarmReceiver</string>
+</resources>
