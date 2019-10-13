@@ -127,7 +127,7 @@ public class MyForegroundService extends Service {
                         if (maxOpen - maxClose > 0) {
                             long diff = System.currentTimeMillis() - maxOpen;
                             Log.d(MY_TAG, String.valueOf("INSTA OPEN" + diff));
-                            if (diff > (1000 *60)) {
+                            if (diff > (1000 *60*15)) {
 
                                 Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
                                 Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
