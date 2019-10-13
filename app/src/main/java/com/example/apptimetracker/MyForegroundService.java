@@ -43,7 +43,7 @@ public class MyForegroundService extends Service {
 
         UsageStatsManager usageStatsManager = (UsageStatsManager) getApplicationContext().getSystemService(getApplicationContext().USAGE_STATS_SERVICE);
         Long currentTime=System.currentTimeMillis();
-        Long startTime=currentTime-(1000*60);
+        Long startTime=currentTime-(1000*50);
         UsageEvents usageEvents = usageStatsManager.queryEvents(startTime, currentTime);
         Long maxOpen = -1L;
         Long maxClose = -1L;
@@ -127,7 +127,7 @@ public class MyForegroundService extends Service {
                         if (maxOpen - maxClose > 0) {
                             long diff = System.currentTimeMillis() - maxOpen;
                             Log.d(MY_TAG, String.valueOf("INSTA OPEN" + diff));
-                            if (diff > (1000 * 50)) {
+                            if (diff > (1000 *60)) {
 
                                 Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
                                 Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
@@ -141,7 +141,9 @@ public class MyForegroundService extends Service {
                                     else
                                         break;
                                 } catch (InterruptedException e) {
-                                    e.printStackTrace();
+                                    thread.interrupt();
+                                    stopForeground(true);
+                                    stopSelf();
                                 }
                                 r.stop();
                             }
@@ -150,7 +152,9 @@ public class MyForegroundService extends Service {
                             try {
                                 Thread.sleep(3000);
                             } catch (InterruptedException e) {
-                                e.printStackTrace();
+                                thread.interrupt();
+                                stopForeground(true);
+                                stopSelf();
                             }
                         }
 
@@ -160,29 +164,6 @@ public class MyForegroundService extends Service {
                     stopSelf();
                 }
             });
-
-
-//        Thread thread=new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Log.d(MY_TAG,"STARTING THREAD");
-//                int i=0;
-//                while(i<=10)
-//                {
-//                    Log.d(MY_TAG,String.valueOf(i));
-//                    try {
-//                        Thread.sleep(3000);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                    i++;
-//                }
-//                Log.d(MY_TAG,"LOOP COMPLETED");
-//                stopForeground(true);
-//                stopSelf();
-//
-//            }
-//        });
 
             thread.start();
         }
@@ -231,11 +212,8 @@ public class MyForegroundService extends Service {
         super.onDestroy();
 
         thread.interrupt();
-//        thread=null;
         stopForeground(true);
         stopSelf();
-//        android.os.Process.killProcess(android.os.Process.myPid());
-
         Log.d(MY_TAG,"Service Destroyed");
     }
 }
